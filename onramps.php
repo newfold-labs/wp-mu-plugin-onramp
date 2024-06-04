@@ -93,12 +93,12 @@ function update_brand_plugin_name($plugin) {
 function check_and_install_plugin() {
     if (isset($_GET['action']) && $_GET['action'] == 'activate' && isset($_GET['plugin']) && $_GET['plugin'] == 'wp-plugin-hostgator/wp-plugin-hostgator.php') {
         $current_brand_plugin = get_option('nfd_brand_plugin', '');
-        if('The Bluehost Plugin' === $plugin_name) {
+        if('The Bluehost Plugin' === $current_brand_plugin) {
             $plugin_slug = 'bluehost-wordpress-plugin';
             $plugin_main_file = 'bluehost-wordpress-plugin.php';
             $plugin_zip_url = 'https://hiive.cloud/workers/release-api/plugins/bluehost/bluehost-wordpress-plugin/download';
         }
-        else if('The Hostgator Plugin' === $plugin_name) {
+        else if('The Hostgator Plugin' === $current_brand_plugin) {
             $plugin_slug = 'wp-plugin-hostgator';
             $plugin_main_file = 'wp-plugin-hostgator.php';
             $plugin_zip_url = 'https://hiive.cloud/workers/release-api/plugins/newfold-labs/wp-plugin-hostgator/download';
