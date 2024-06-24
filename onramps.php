@@ -4,21 +4,26 @@ add_filter('plugin_action_links', 'remove_delete_button', 10, 2);
 add_action('activated_plugin', 'store_brand_plugin_name_on_activation', 10, 1);
 add_action('deactivated_plugin', 'store_brand_plugin_name_on_deactivation', 10, 1);
 add_action('admin_init', 'check_and_install_plugin');
+add_action( 'bulk_actions-plugins', 'prevent_bulk_plugin_deletion' );
 
 /**
  * Remove the delete button for brand plugin
+ *
+ * @param array  $actions An array of plugin action links
+ *
+ * @param string $plugin_file Path to the plugin
  */
-function remove_delete_button($actions, $plugin_file) {
-    $BH_plugin = 'bluehost-wordpress-plugin/bluehost-wordpress-plugin.php';
-    $HG_plugin = 'wp-plugin-hostgator/wp-plugin-hostgator.php';
-
-    if ($plugin_file === $BH_plugin || $plugin_file === $HG_plugin) {
-        unset($actions['delete']);
-    }
-
-    return $actions;
+function remove_delete_button( $actions, $plugin_file ) {
+	// List of plugins to protect from deletion
+	$protected_plugins = array(
+		'wp-plugin-hostgator/wp-plugin-hostgator.php',
+		'bluehost-wordpress-plugin/bluehost-wordpress-plugin.php',
+	);
+	if ( in_array( $plugin_file, $protected_plugins ) ) {
+		unset( $actions['delete'] );
+	}
+	return $actions;
 }
-
 
 /**
  * Add placeholder for the brand plugin if it is not there in the plugin list 
@@ -188,4 +193,13 @@ function check_and_install_plugin() {
         wp_redirect( admin_url( 'plugins.php?activate=true' ) );
         exit;
     }
+}
+/**
+ * Restrict the bulk deletion of plugins
+ *
+ * @param array $actions An array of plugin action links
+ * */
+function prevent_bulk_plugin_deletion( $actions ) {
+	unset( $actions['delete-selected'] );
+	return $actions;
 }
